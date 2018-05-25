@@ -138,7 +138,11 @@ public class List {
 	 * <h4>Description:</h4><br>
 	 * <p>
 	 * A private utility method for traversing the list of Nodes
-	 * while each iteration, 
+	 * while each iteration, set the current Node position
+	 * to the reference of the next one - then return that final reference.
+	 * Very useful for when needing to find the final element in the list and add something
+	 * after it or when wanting to add something somewhere in between the first and last
+	 * link.
 	 * </p>
 	 * 
 	 * @param index
@@ -153,8 +157,12 @@ public class List {
 	}
 
 	/*
+	 * <h4>Description:</h4><br>
+	 * <p>
+	 * Remove the head node from the list. 
+	 * </p>
 	 * 
-	 * 
+	 * @see insert()
 	 * */
 	public boolean deleteNode(){
 
@@ -186,8 +194,15 @@ public class List {
 	}
 
 	/*
+	 * Description:<br>
+	 * <p>
+	 * Will use the private utility method searchFor() to look for a particular
+	 * Object (Node) within the current list.
+	 * </p>
 	 * 
-	 * 
+	 * @param aNode - a Node object that is the target to look for within
+	 * the list. Value is sent as parameter to searchFor() method.
+	 * @see searchFor
 	 * */
 	public boolean contains(Object aNode){
 		return searchFor(aNode) != null;
