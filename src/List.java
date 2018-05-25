@@ -46,6 +46,20 @@ public class List {
 	 * */
 
 	/*
+	 * Useful links that I used when trying to figure this stuff out.
+	 * http://pages.cs.wisc.edu/~vernon/cs367/notes/4.LINKED-LIST.html
+	 * https://courses.cs.washington.edu/courses/cse143/17wi/lectures/ListNode.java
+	 * https://www.geeksforgeeks.org/linked-list-set-2-inserting-a-node/
+	 * https://courses.cs.washington.edu/courses/cse143/09wi/lectures/2009-01-30/programs/LinkedIntList.java
+	 * https://www.geeksforgeeks.org/how-to-write-functions-that-modify-the-head-pointer-of-a-linked-list/
+	 * https://mydevgeek.com/linked-list-insert-a-node-at-a-specific-position/
+	 * https://stackoverflow.com/questions/26783447/java-creating-an-insert-function-for-a-linkedlist-to-add-all-inserted-elements
+	 * https://docs.oracle.com/javase/7/docs/api/java/util/List.html#add(int,%20E)
+	 * https://www2.hawaii.edu/~esb/2011fall.ics211/LinkedList.java.html
+	 * https://courses.cs.washington.edu/courses/cse143/11wi/lectures/01-28/programs/LinkedIntList.java
+	 * */
+
+	/*
 	 * Inner class, Node, is used to set the reference from the current
 	 * link to the next one with the value of the Object passed in by the
 	 * driver class and Node 2-argument constructor.
@@ -102,6 +116,22 @@ public class List {
 	public List(){
 		head = null; //empty list
 		//tail = null;
+	}
+
+	/*
+	 * Description:<br>
+	 * <p>
+	 * Using the single arg construcor to build a new
+	 * Node object.
+	 * </p>
+	 * 
+	 * @param d - an object with a value which will be stored
+	 * at the next position in the list.
+	 * */
+	public void insertFirst(Object d){
+		Node newHeader = new Node(d);
+		newHeader.next = head;
+		head = newHeader;
 	}
 
 	/*
@@ -164,8 +194,24 @@ public class List {
 	 * 
 	 * @see insert()
 	 * */
-	public boolean deleteNode(){
+	public boolean remove(int index){
+		try {
+			if(head==null){
+				throw new LinkedListExceptions("List is empty");
+			}else if(index < 0  || index > size()){
+				throw new LinkedListExceptions("Invalid position to remove. List is not that large/small");
+			}else{
+				Node currentPos = moveToNext(index-1);
+				head = currentPos;
+				return true;
+			}
+		}catch(LinkedListExceptions lle){
+			System.out.println(lle.getMessage());
+		}
+		return true;
+	}
 
+	public boolean remove(){
 		if(head!=null){
 			head = head.next;
 			return true;
@@ -173,8 +219,6 @@ public class List {
 			return false;
 		}
 	}
-
-
 	/*
 	 * Simply moves from one link to the next
 	 * as long as the position isn't null and
@@ -209,14 +253,21 @@ public class List {
 	}
 
 	/*
+	 * Description:<br>
+	 * <p>
+	 * A private utility method that's very handy for checking to see if the list
+	 * contains a particular item. While the reference pointer leads to another
+	 * link, then continue to move to the next Node. If a match is found, then
+	 * return that Node.
+	 * </p>
 	 * 
-	 * 
+	 * @param targetNode - the Object to search the list for.
 	 * */
 	private Node searchFor(Object targetNode){
 		Node currentNode = head;
 
 		while(currentNode !=null){
-			if(head.equals(targetNode)){
+			if(head == (targetNode)){
 				return currentNode;
 			}
 			head = head.next;
@@ -246,8 +297,14 @@ public class List {
 	}
 
 	/*
+	 * Description:<br>
+	 * <p>
+	 * Will return true if the current head value points to a null location.
+	 * False otherwise - meaning there is a link after the current one or we are
+	 * not at the beginning or end of the list.
+	 * </p>
 	 * 
-	 * 
+	 * @see Node inner class constructor#1
 	 * */
 	public boolean isEmpty(){
 
@@ -257,9 +314,12 @@ public class List {
 	/*
 	 * <h4>Description:</h4>
 	 * <p>
-	 * 
+	 * Finding the index (position) of a particular Node within the list. First, set the
+	 * position to look at the current Node value. Then, while the current position
+	 * has a value (Node) then check the target Node against the current position. If
+	 * it's a match, return the Node's position in the list.
 	 * </p>
-	 * @param target
+	 * @param target - a Node object
 	 * */
 	public int indexOf(Object target){
 		int index = 0;
@@ -276,28 +336,64 @@ public class List {
 		return -1;
 	}
 
-	public static void main(String[] args) throws LinkedListExceptions{
+	/*
+	 * Description:<br>
+	 * <p>
+	 * Adds to the end of the list by finding the next available
+	 * position that references a null pointer.
+	 * </p>
+	 * 
+	 * @param d - a Node object
+	 * @param head - a reference object of Node
+	 * */
+	public void append(Object d){
+		Node temp = head;
 
-		String target = "testingLinkedList!";
+		if (head == null) {
+			head = new Node(d, null);
+		}
 
-		List list = new List();
-		Object object1 = (Character) target.charAt(4);
-		Object object2 = (Character) target.charAt(1);
-		Object object3 = (Character) target.charAt(2);
-		Object object4 = (Character) target.charAt(9);
-		Object object5 = (Character) target.charAt(3);
+		while ((head.next != null)) {
+			head = head.next;
+		}
+
+		head.next = new Node(d, null);
+	}
+
+	public static void main(String[] args){
+
+		/*
+		 * Mostly copied over from the lab so I didn't have to retype a lot of the tests.
+		 * Added testing for other methods such as indexOf, contains, size, and isEmpty.
+		 * */
+		String target = "testingList!";
+
+		List list = new List(); //new list
+
+		Object object1 = (Character) target.charAt(4); //i
+		Object object2 = (Character) target.charAt(1); //e
+		Object object3 = (Character) target.charAt(2); //s
+		Object object4 = (Character) target.charAt(9); //s
+		Object object5 = (Character) target.charAt(3); //t - won't be added
 
 		list.insert(object1, 0);
 		list.insert(object2, 1);
 		list.insert(object3, 2);
 		list.insert(object4, 3);
-		list.insert(object5, 5);
+		list.insert(object5, 5); //testing the custom exceptions class.
 
 		System.out.println("My list has " + list.size( ) + " nodes.");
 		list.toString();
 		System.out.println("toString = " + list.toString());
 
-		list.deleteNode();
+		list.remove(0);
+		//list.contains(object3);
+		System.out.println(list.indexOf(object3));
+		//list.deleteNode();
+		//list.deleteNode();
+		//list.deleteNode();
+
+		System.out.println(list.isEmpty()); //check for empty list
 
 		System.out.println("after deleting head, list has " + list.size() + " nodes");
 		System.out.println("toString = " + list.toString());
